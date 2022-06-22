@@ -49,7 +49,6 @@ knitr::opts_knit$set(root.dir = here())
 You can do this in your console if you want so it doesn't print to the screen or to the knitted html
 Try the functions head(), nrow() & ncol(), colnames()
 
-## 
 
 ## Match the carotenoid data sample names with the gene expression data sample names
 Use the sample naming key to match the `rlog_ids` to the `accession_name_carot`
