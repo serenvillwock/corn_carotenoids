@@ -1,0 +1,122 @@
+---
+title: "Reproducible Scripting intro"
+author: "Seren Villwock / Jean-Luc Jannink"
+date: '2022-06-22'
+output: html_document
+---
+
+Text below adapted from Jean-Luc Jannink's 2022 Quantitative Genetics course, lab 1.
+
+
+## About reproducible scripting
+  i) A reproducible analysis workflow includes a predictable input file and data structure, and outputs that are described, interpreted, and put in the context of the overall project in English.  
+  ii) The audience of this workflow is akin to someone who might be reviewing a manuscript derived from the work. The **most important audience is yourself, six months later**, or your close collaborators (e.g., lab group) who may need to carry on the work after you move on.  
+  iii) Whether you like it or not, you are a computational biologist. Lab biology experiments need to be reproducible. Computational biology analyses need to be reproducible.  
+2. R markdown and workflowr  
+  i) R markdown language. It allows you to mingle script with formatted text, with script outputs.  Note that Python and c++ scripts can be incorporated into R markdown. Help pages on rmarkdown:  
+[Cheat Sheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)  
+[Authoring Basics](https://rmarkdown.rstudio.com/authoring_basics.html)  
+[In Literate Programming](https://annakrystalli.me/rrresearch/05_literate-prog.html)  
+  ii) `workflowr` aims to make it easier to follow a coding workflow that will increase the communicability and reproducibility of your code, and constrain you somewhat to following that workflow. The package sets up a standard directory file structure and populates it with useful initial R markdown (.Rmd) files.  
+  iii) `workflowr` also sets up the directory as a git version control repository. There [is more](https://cran.r-project.org/web/packages/workflowr/vignettes/wflow-01-getting-started.html) you can do with the package, and it's worth checking it out (and its extensive documentation!) 
+
+
+## Further background & resources
+* R markdown is very good for documenting **scripts**, but less so **programs**. If code is linear and fairly simple, I call it a script.  If code has loops, is potentially multi-purpose, and defines functions, I call it a program. `workflowr` provides a `code` directory for programs, and an `analysis` directory for scripts. Of course, scripts can (should) refer to functions, etc., in the `code` directory. Any raw data can go in `data`. Script outputs can go in `output`. Final figures and so on can go in `docs`.  
+* If you write a series of functions that you will use repeatedly, it's probably worth [making a package](http://r-pkgs.had.co.nz/) out of them.  That is not trivial, but it's less difficult than it sounds.  You do not have to submit your package to **CRAN**, but can just use it internally.  The documentation of functions that goes along with making a package is very helpful over time.  
+* If you write a program that you imagine will develop over time, learn version control (probably "git".  I don't know any other version control...), [here](https://guides.github.com/activities/hello-world/) or [here](https://www.atlassian.com/git).  Note that a public repository like github can be quite useful for making your data available once you publish your research. Note too that `workflowr` commands wrap a number of git commands to simplify the work flow, particularly if you are working in the RStudio environment.    
+* Here are some useful articles:
+  i) [Ten Simple Rules for Reproducible Computational Research](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003285)  
+  ii) [Good enough practices in scientific computing](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510)
+  iii) [Creating and sharing reproducible research code the workflowr way](https://f1000research.com/articles/8-1749/v1)
+  
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+print("hello")
+```
+
+
+
+Script setup chunk for formatting the "knitted" document:
+(you can ignore this unless you want to change something about the formatting)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE)
+knitr::opts_chunk$set(message=FALSE)
+knitr::opts_chunk$set(cache=FALSE)
+knitr::opts_chunk$set(tidy=TRUE)
+knitr::opts_chunk$set(results="hold")
+knitr::opts_chunk$set(collapse=TRUE)
+knitr::opts_chunk$set(fig.show="hold")
+knitr::opts_chunk$set(tidy.opts = list(wrap=FALSE))
+```
+
+
+### Script setup
+Install/load your packages at the beginning. This shows users early on what the script dependencies are.  
+
+For example, we will load a package called "here" which helps you organize your files easily without having to spell out the whole directory every time. You will need to install "here" first if you haven't already.
+```{r load packages}
+#install.packages("here")
+library(here)
+
+#install.packages("ggplot2")
+library(ggplot2)
+```
+
+
+### Set file locations relative to the project folder using `here`  
+```{r set here path}
+here::i_am("analysis/StartHere_ReproducibleScripting.Rmd") 
+#the path to this document relative to the project folder
+```
+
+
+### Try simulating some data and printing a graph
+```{r}
+# The function rnorm returns simulated values from a normal distribution
+?rnorm() #to see documentation
+# the syntax is: rnorm(n, mean, sd)
+
+# Here we will draw 500 samples from a normal distribution with mean= 15 and standard deviation = 10
+random_sample <- rnorm(500, 15, 10)
+```
+
+Make a scatterplot of the sample data with ggplot:
+```{r}
+#First format the data as a dataframe with two columns
+random_sample <- as.data.frame(random_sample)
+random_sample$ID <- rownames(random_sample)
+
+# Check to see how it worked:
+head(random_sample)
+
+# Now plot it as a scatterplot:
+ggplot(data = random_sample, aes(x= ID, y=random_sample)) +
+  geom_point()
+
+
+# How about as a histogram:
+ggplot(data = random_sample, aes(random_sample)) +
+  geom_histogram()
+
+
+# Make it fancier:
+ggplot(data = random_sample, aes(random_sample)) +
+  geom_histogram(breaks=seq(-30, 50, by=10), 
+                 col="blue", 
+                 fill="green", 
+                 alpha = .2) + 
+  labs(title="Fancy Histogram", x="sample", y="frequency") 
+
+
+#for help: run ?ggplot()
+```
+

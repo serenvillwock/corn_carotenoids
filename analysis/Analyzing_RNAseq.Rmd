@@ -1,0 +1,46 @@
+---
+title: "Analyze sweet corn RNAseq data"
+author: "Seren Villwock"
+date: '2022-06-22'
+output: html_document
+---
+
+### Load packages (make sure you install them first)
+```{r Script setup, echo=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(here)
+```
+
+
+### Script setup
+
+Set file locations relative to the project folder using `here`  
+```{r set here path, include=FALSE}
+here::i_am("analysis/Analyzing_RNAseq.Rmd")
+```
+
+Formatting (you can ignore this unless you want to change something about the formatting)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE)
+knitr::opts_chunk$set(message=FALSE)
+knitr::opts_chunk$set(cache=FALSE)
+knitr::opts_chunk$set(tidy=TRUE)
+knitr::opts_chunk$set(results="hold")
+knitr::opts_chunk$set(collapse=TRUE)
+knitr::opts_chunk$set(fig.show="hold")
+knitr::opts_chunk$set(tidy.opts = list(wrap=FALSE))
+knitr::opts_knit$set(root.dir = here())
+```
+
+
+
+
+## Read in the data:
+There is a .txt file with gene counts from RNAseq and a .csv with carotenoid data located in the `data/` folder
+```{r read in data}
+
+```
+
+
+
